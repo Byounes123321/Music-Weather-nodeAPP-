@@ -2,3 +2,6 @@ extends layout
 
 block main-content 
     h1 hello
+     form(action="/" method="post")
+        input(name="city" type="text" placeholder="Enter your City" required)
+        input(type="submit" class="ghost-button" value="Get Weather")

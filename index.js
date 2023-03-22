@@ -2,7 +2,7 @@
 const {req , res} = require ("express");
 const express = require ("express");
 const path = require ("path");
-
+const weather = require('./components/OpenWeatherApi'); 
 // Set up express app
 const app = express();
 const port = process.env.PORT || 8888;
@@ -17,7 +17,9 @@ app.use(express.static(path.join(__dirname, "public")));
 //Set home page
 app.get("/", async (req, res) =>{
     // res.status(200).send("Test page");
-    res.render("index", {title: "Home"})
+    let city = req.body.city;
+   let weatherRes =  weather.getWeather(city);
+    res.render("index", {title: "Home", weather: weatherRes})
 })
 
 app.listen(port, () =>{
