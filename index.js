@@ -18,7 +18,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (req, res) =>{
     // res.status(200).send("Test page");
     let city = req.body.city;
-   let weatherRes =  weather.getWeather(city);
+    //TODO:
+    // cant get city? idk but do this first!!!!!!!!
+    let weatherRes =  weather.getWeather(city);
     res.render("index", {title: "Home", weather: weatherRes})
 })
 
