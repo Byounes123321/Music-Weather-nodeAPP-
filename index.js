@@ -3,6 +3,7 @@ const {req , res} = require ("express");
 const express = require ("express");
 const path = require ("path");
 const weather = require('./components/OpenWeatherApi'); 
+const bodyParser = require('body-parser');
 // Set up express app
 const app = express();
 const port = process.env.PORT || 8888;
@@ -16,11 +17,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Set home page
 app.get("/", async (req, res) =>{
-    // res.status(200).send("Test page");
-    let city = req.body.city;
-    //TODO:
-    // cant get city? idk but do this first!!!!!!!!
-    let weatherRes =  weather.getWeather(city);
+    let city = req.query.city;
+    let weatherRes = await weather.getWeather(city);
+    console.log(weatherRes);
     res.render("index", {title: "Home", weather: weatherRes})
 })
 
