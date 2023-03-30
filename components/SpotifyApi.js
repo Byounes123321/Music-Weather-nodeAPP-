@@ -6,31 +6,34 @@ const clientSecret = process.env.SPOTIFYCLIENTSECRET;
 
 
 async function getToken() {
-    await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`
-      })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-        // authToken = data
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`
+  });
+  const data = await response.json();
+  return data.access_token;
 }
 
-let authToken =  getToken()
+
 
 async function searchPlaylist() {
-    await fetch(`https://api.spotify.com/v1/search?q=sunny&type=playlist&market=CA&limit=5`, {
+
+  let authToken = await getToken();
+  // console.log(authToken);
+
+  const response = await fetch(`https://api.spotify.com/v1/search?q=sunny&type=playlist&market=CA&limit=5`, {
         headers: {
-          'Authorization': 'Bearer' + authToken,
+          'Authorization': 'Bearer ' + authToken,
         }
-      })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
+      });
+  const data = await response.json();
+  // console.log(data.playlists.items);
+  return data.playlists.items[0].name;
 }
+// searchPlaylist();
 
 module.exports = {
     getToken,

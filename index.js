@@ -23,7 +23,6 @@ app.get("/", async (req, res) =>{
     console.log(weatherRes);
     // let getToken = await spotify.getToken();
     let getPlaylists  = await spotify.searchPlaylist();
-
     res.render("index", {title: "Home", weather: weatherRes, music: getPlaylists })
 })
 
