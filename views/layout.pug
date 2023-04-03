@@ -5,8 +5,25 @@ html
         meta(charset= "utf-8")
         title #{title} | test site 
         block scripts 
-        script 
-    body 
+        script.
+            window.onload = async function {
+                if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                console.log("Geolocation is not supported by this browser.");
+                }
+            }
+
+            function showPosition(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                // Make an AJAX request to the server with the latitude and longitude
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/getcity");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({ latitude: latitude, longitude: longitude }));
+            }
+    body
         header#header
             div.header-content
                 h2#site-name

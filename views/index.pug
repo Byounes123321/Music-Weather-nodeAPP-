@@ -6,9 +6,9 @@ block main-content
         input(name="city" type="text" placeholder="Enter your City" required)
         input(type="submit" class="ghost-button" value="Get Weather")
     h2
-        if (weather.cod == 200)
-            | The weather in #{weather.name} is #{weather.weather[0].description} and the temperature is #{weather.main.temp}C degrees.
-        else
-            | #{weather.message}
+        //- if (weather.cod == 200)
+        //-     | The weather in #{weather.name} is #{weather.weather[0].description} and the temperature is #{weather.main.temp}C degrees.
+        //- else
+        //-     | #{weather.message}
     h3 
-        #{music}
+        | #{music}
