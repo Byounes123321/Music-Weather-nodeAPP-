@@ -1,14 +1,41 @@
-extends layout 
+doctype html
+html
+  head
+    title= title
+  body
+    h1 Welcome to the Weather App
+    h2(id="weather")
+    h2(id='music')
+    script.
+      let response;
+      let showWeather = document.getElementById("weather");
+      let showMusic = document.getElementById("music");
+      window.onload = async function() {
+        //-   alert("loaded");
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              console.log("Geolocation is not supported by this browser.");
+          }
+      }
 
-block main-content 
-    h1 hello
-     form(action="/" method="get")
-        input(name="city" type="text" placeholder="Enter your City" required)
-        input(type="submit" class="ghost-button" value="Get Weather")
-    h2
-        //- if (weather.cod == 200)
-        //-     | The weather in #{weather.name} is #{weather.weather[0].description} and the temperature is #{weather.main.temp}C degrees.
-        //- else
-        //-     | #{weather.message}
-    h3 
-        | #{music}
+      function showPosition(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+          //- alert("showPos");
+          // Make an AJAX request to the server with the latitude and longitude
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "/getcity");
+          xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.addEventListener("load", function() {
+            if (xhr.status === 200) {
+                response = JSON.parse(xhr.responseText); // parse the JSON response
+                console.log(response .weatherRes.cod); // check if this is a valid object
+                showWeather.innerHTML = 'The weather in '+ response.weatherRes.name +' is ' + response.weatherRes.weather[0].main + ' and ' + response.weatherRes.main.temp + 'C'; // example of accessing a property
+                showMusic.innerHTML = response.getPlaylist.name
+            } else {
+                console.error('Request failed. Returned status of ' + xhr.status);
+            }
+          });
+          xhr.send(JSON.stringify({ latitude: latitude, longitude: longitude }));
+      }

@@ -20,14 +20,22 @@ app.use(bodyParser.json());
 
 
 //get location from client
-let weatherRes;
+let weatherRes= "";
+app.post('/getcity', async (req, res) => {
+  try {
+    console.log('Received POST request to /getcity');
+    const { latitude, longitude } = req.body;
+    console.log("latitude:", latitude, "longitude:", longitude);
+    weatherRes = await weather.getWeather(latitude, longitude);
+    console.log(weatherRes);
+    let getPlaylist  = await spotify.searchPlaylist(weatherRes);
+    res.send({weatherRes , getPlaylist});
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error'); // or another suitable error response
+  }
+});
 
-app.get('/getcity',async (req,res)=>{
-  const { lat, long } = await req.body;
-  console.log(lat);
-  weatherRes = await weather.getWeather(lat, long);
-  console.log(weatherRes);
-})
 
 //Set home page
 app.get("/", async (req, res) =>{
@@ -35,9 +43,9 @@ app.get("/", async (req, res) =>{
     // let weatherRes = await weather.getWeather(city);
     // console.log(weatherRes);
     // let getToken = await spotify.getToken();
-    console.log("weateher",weatherRes);
-    let getPlaylists  = await spotify.searchPlaylist();
-    res.render("index", {title: "Home", weather: weatherRes, music: getPlaylists.name })
+    // console.log("weather:/",weatherRes);
+    //get the weather desc and pass it to spotify
+    res.render("index", {title: "Home"})
 })
 
 app.listen(port, () =>{

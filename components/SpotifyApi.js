@@ -19,18 +19,18 @@ async function getToken() {
 
 
 
-async function searchPlaylist() {
-
+async function searchPlaylist(weather) {
+  // console.log('spotify:',weather);
   let authToken = await getToken();
   // console.log(authToken);
 
-  const response = await fetch(`https://api.spotify.com/v1/search?q=cloudsvibes&type=playlist&market=CA&limit=5`, {
+  const response = await fetch(`https://api.spotify.com/v1/search?q=${weather.weather[0].main}vibes&type=playlist&market=${weather.sys.country}&limit=5`, {
         headers: {
           'Authorization': 'Bearer ' + authToken,
         }
       });
   const data = await response.json();
-  console.log(data.playlists.items[0].name);
+  console.log(data.playlists.items[0]);
   return data.playlists.items[0];
 }
 // searchPlaylist();
