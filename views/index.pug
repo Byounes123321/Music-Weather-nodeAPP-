@@ -1,21 +1,33 @@
 doctype html
 html
   head
-    title= title
+  script(src="https://pugjs.org/js/pug.js")
+  link(rel="stylesheet", href="views/style.css")
+  title= title
   body
-    h1 Welcome to the Weather App
-    h2(id="weather")
-    h2(id='music')
+    header 
+        h1.site-name Welcome to my Music & Weather App
+    main
+        div#weatherContainer
+            div#weather
+        div#loader
+        div#musicContainer
+            h2#music
+    footer 
+        p &copy Copyright Bassil Younes, 2023
     script.
       let response;
       let showWeather = document.getElementById("weather");
       let showMusic = document.getElementById("music");
+      let loader = document.getElementById("loader");
+      let musicDiv = document.getElementById("musicContainer");
+      let weatherDiv = document.getElementById("weatherContainer");
       window.onload = async function() {
         //-   alert("loaded");
           if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(showPosition);
           } else {
-              console.log("Geolocation is not supported by this browser.");
+            alert("Geolocation is not supported by this browser.");
           }
       }
 
@@ -27,12 +39,57 @@ html
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "/getcity");
           xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.addEventListener("load", function() {
+          xhr.addEventListener("load", function() {
             if (xhr.status === 200) {
-                response = JSON.parse(xhr.responseText); // parse the JSON response
-                console.log(response .weatherRes.cod); // check if this is a valid object
-                showWeather.innerHTML = 'The weather in '+ response.weatherRes.name +' is ' + response.weatherRes.weather[0].main + ' and ' + response.weatherRes.main.temp + 'C'; // example of accessing a property
-                showMusic.innerHTML = response.getPlaylist.name
+                loader.style.display = "none";
+                musicDiv.style.display = "block";
+                weatherDiv.style.display = "block";
+                response = JSON.parse(xhr.responseText); 
+                console.log(response.weatherRes); 
+                const w = response.weatherRes
+                showWeather.innerHTML =
+                '<h2>' + w.name +' Weather</h2>' +
+                '<div id="temp-icon">'+
+                '<img src="https://openweathermap.org/img/wn/'+ w.weather[0].icon +'@2x.png">'+
+               //if Country is in metric show as °F
+                '<span><strong>'+Math.round(w.main.temp)+ '°C</strong></span>'+
+                '</div>'+
+                '<div id=h-l>'+
+                '<p>H:' +Math.round(w.main.temp_max )+ '° L:' + Math.round(w.main.temp_min)+'° </p>'+
+                '</div>'+
+                '<p>Feels like '+Math.round(w.main.feels_like)+'° with '+w.weather[0].description+'</p>' +
+                '<ol>'+
+                '<p>TO DO:</p>'+
+                '<li>Add sunrise and sunset</li>'+
+                '<li>Add maybe the wind</li>'+
+                '<li>Add humidity maybe</li>'+
+                '<li>Cute sunset animation?</li>'+
+                '</ol>';
+
+                const playlists = response.getPlaylist.playlists; 
+                console.log(playlists); 
+
+                let html =
+                 '<div>'+
+                 '<h2>Let the Weather Set the Beat:<br> Personalized <span style="color: #1FDF64">Spotify</span> Playlists</h2>'+
+
+                 '<ul>';
+                for (let i = 0; i < playlists.items.length; i++) {
+                html +=  
+                '<a href="' + playlists.items[i].external_urls.spotify + '" target="_blank">'+
+                '<li>'+
+                '<div id="playlistContainer">' + 
+                '<img src="'+playlists.items[i].images[0].url+'" height ="60px" width="60px">'+
+                '<div id="name-by">'+
+                '<p>'+ playlists.items[i].name + '</p>'+
+                '<p>By '+playlists.items[i].owner.display_name +'</p>'+
+                '</div>'+
+                '</div>'+
+                '</li></a>';
+                }
+                html += '</ul></div>';
+                showMusic.innerHTML = html;
+                //- showMusic.innerHTML = pug.renderFile('index.pug', { playlists: playlists })
             } else {
                 console.error('Request failed. Returned status of ' + xhr.status);
             }

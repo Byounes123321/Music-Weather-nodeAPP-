@@ -14,6 +14,7 @@ async function getToken() {
     body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`
   });
   const data = await response.json();
+  console.log(data.access_token);
   return data.access_token;
 }
 
@@ -24,14 +25,15 @@ async function searchPlaylist(weather) {
   let authToken = await getToken();
   // console.log(authToken);
 
-  const response = await fetch(`https://api.spotify.com/v1/search?q=${weather.weather[0].main}vibes&type=playlist&market=${weather.sys.country}&limit=5`, {
+  const response = await fetch(`https://api.spotify.com/v1/search?q=${weather.weather[0].main}%20vibes&type=playlist&market=${weather.sys.country}&limit=5`, {
         headers: {
           'Authorization': 'Bearer ' + authToken,
         }
       });
   const data = await response.json();
-  console.log(data.playlists.items[0]);
-  return data.playlists.items[0];
+  console.log(data.playlists);
+  return data;
+  // .playlists.items[0];
 }
 // searchPlaylist();
 
