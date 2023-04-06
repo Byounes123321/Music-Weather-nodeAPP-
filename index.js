@@ -17,6 +17,11 @@ app.set("view engine", "pug");
 app.use(express.static(path.join(__dirname, "public")));
 //Set body parser
 app.use(bodyParser.json());
+//set MIME type for style sheet
+app.get('/views/style.css', function(req, res) {
+  res.setHeader('Content-Type', 'text/css');
+  res.sendFile(__dirname + '/views/style.css');
+});
 
 
 //get location from client
@@ -30,9 +35,9 @@ app.post('/getcity', async (req, res) => {
     console.log(weatherRes);
     let getPlaylist  = await spotify.searchPlaylist(weatherRes);
     res.send({weatherRes , getPlaylist});
-  } catch (error) {
+  } catch (error) { 
     console.error(error);
-    res.status(500).send('Internal server error'); // or another suitable error response
+    res.status(500).send('Internal server error'); 
   }
 });
 
