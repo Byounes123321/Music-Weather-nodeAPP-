@@ -23,7 +23,6 @@ app.get('/views/style.css', function(req, res) {
   res.sendFile(__dirname + '/views/style.css');
 });
 
-
 //get location from client
 let weatherRes= "";
 app.post('/getcity', async (req, res) => {
@@ -44,15 +43,9 @@ app.post('/getcity', async (req, res) => {
 
 //Set home page
 app.get("/", async (req, res) =>{
-    // let city = req.query.city;
-    // let weatherRes = await weather.getWeather(city);
-    // console.log(weatherRes);
-    // let getToken = await spotify.getToken();
-    // console.log("weather:/",weatherRes);
-    //get the weather desc and pass it to spotify
-    res.render("index", {title: "Home"})
+  res.render("index", {title: "Home"})
 })
 
 app.listen(port, () =>{
-    console.log(`listening on http://localhost:${port}`);
+  console.log(`listening on http://localhost:${port}`);
 })
