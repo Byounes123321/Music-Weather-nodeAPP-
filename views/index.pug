@@ -44,20 +44,36 @@ html
                 loader.style.display = "none";
                 musicDiv.style.display = "block";
                 weatherDiv.style.display = "block";
+                let units = "°C";
                 response = JSON.parse(xhr.responseText); 
                 console.log(response.weatherRes); 
                 const w = response.weatherRes
+                let temp = w.main.temp;
+                let maxTemp = w.main.temp_max;
+                let minTemp = w.main.temp_min;
+                let fLike = w.main.feels_like;
+                function CtoF(temp){
+                    return F = temp * 9/5 +32;
+                }
+                if(w.sys.country == "US" || w.sys.country == "LR" || w.sys.country == "MM" ){
+                    units = "°F"
+                    temp = CtoF(temp);
+                    minTemp = CtoF(minTemp);
+                    maxTemp = CtoF(maxTemp);
+                    fLike = CtoF(fLike);
+
+                };
                 showWeather.innerHTML =
                 '<h2>' + w.name +' Weather</h2>' +
                 '<div id="temp-icon">'+
                 '<img src="https://openweathermap.org/img/wn/'+ w.weather[0].icon +'@2x.png">'+
                //if Country is in metric show as °F
-                '<span><strong>'+Math.round(w.main.temp)+ '°C</strong></span>'+
+                '<span><strong>'+Math.round(temp)+ units+ '</strong></span>'+
                 '</div>'+
                 '<div id=h-l>'+
-                '<p>H:' +Math.round(w.main.temp_max )+ '° L:' + Math.round(w.main.temp_min)+'° </p>'+
+                '<p>H:' +Math.round(minTemp )+ '° L:' + Math.round(maxTemp)+'° </p>'+
                 '</div>'+
-                '<p>Feels like '+Math.round(w.main.feels_like)+'° with '+w.weather[0].description+'</p>' +
+                '<p>Feels like '+Math.round(fLike)+'° with '+w.weather[0].description+'</p>' +
                 '<ol>'+
                 '<p>TO DO:</p>'+
                 '<li>Add sunrise and sunset</li>'+
@@ -72,7 +88,6 @@ html
                 let html =
                  '<div>'+
                  '<h2>Let the Weather Set the Beat:<br> Personalized <span style="color: #1FDF64">Spotify</span> Playlists</h2>'+
-
                  '<ul>';
                 for (let i = 0; i < playlists.items.length; i++) {
                 html +=  

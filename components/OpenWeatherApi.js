@@ -9,8 +9,6 @@ async function getWeather(lat,long){
     console.log("Called weather");
     return response.json();
 }
-
-
 module.exports = {
     getWeather,
 }
