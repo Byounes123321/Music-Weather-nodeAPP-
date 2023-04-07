@@ -1,5 +1,5 @@
-doctype html
-html
+doctype html 
+html(lang="en")
   head
   script(src="https://pugjs.org/js/pug.js")
   link(rel="stylesheet", href="views/style.css")
@@ -8,11 +8,12 @@ html
     header 
         h1.site-name Welcome to my Music & Weather App
     main
-        div#weatherContainer
-            div#weather
-        div#loader
-        div#musicContainer
-            h2#music
+        div#siteContainer
+            div#weatherContainer
+                div#weather
+            div#loader
+            div#musicContainer
+                h2#music
     footer 
         p &copy Copyright Bassil Younes, 2023
     script.
@@ -46,12 +47,13 @@ html
                 weatherDiv.style.display = "block";
                 let units = "°C";
                 response = JSON.parse(xhr.responseText); 
-                console.log(response.weatherRes); 
+                //- console.log(response.weatherRes); 
                 const w = response.weatherRes
                 let temp = w.main.temp;
                 let maxTemp = w.main.temp_max;
                 let minTemp = w.main.temp_min;
                 let fLike = w.main.feels_like;
+                let wind = Math.round(w.wind.speed * 3.6) + ' km/h';
                 function CtoF(temp){
                     return F = temp * 9/5 +32;
                 }
@@ -61,29 +63,59 @@ html
                     minTemp = CtoF(minTemp);
                     maxTemp = CtoF(maxTemp);
                     fLike = CtoF(fLike);
-
+                    wind = w.wind.speed + ' mph'
                 };
+                let sunRise = new Date(w.sys.sunrise * 1000);
+                let sunRiseH = sunRise.getHours();
+                let sunRiseM = sunRise.getMinutes();
+
+                let sunSet = new Date(w.sys.sunset * 1000);
+                let sunSetH = (sunSet.getHours()-12);
+                let sunSetM = sunSet.getMinutes();
+                
                 showWeather.innerHTML =
                 '<h2>' + w.name +' Weather</h2>' +
                 '<div id="temp-icon">'+
-                '<img src="https://openweathermap.org/img/wn/'+ w.weather[0].icon +'@2x.png">'+
-               //if Country is in metric show as °F
+                '<img alt="current weather icon" src="https://openweathermap.org/img/wn/'+ w.weather[0].icon +'@2x.png">'+
                 '<span><strong>'+Math.round(temp)+ units+ '</strong></span>'+
                 '</div>'+
                 '<div id=h-l>'+
-                '<p>H:' +Math.round(minTemp )+ '° L:' + Math.round(maxTemp)+'° </p>'+
+                '<p><span style="color:#F97C00">H:' +Math.round(minTemp )+ '° </span></p>'+
+                '<p>  <span style="color:#4BDCE3">L:' + Math.round(maxTemp)+'° </span></p>'+
                 '</div>'+
                 '<p>Feels like '+Math.round(fLike)+'° with '+w.weather[0].description+'</p>' +
-                '<ol>'+
-                '<p>TO DO:</p>'+
-                '<li>Add sunrise and sunset</li>'+
-                '<li>Add maybe the wind</li>'+
-                '<li>Add humidity maybe</li>'+
-                '<li>Cute sunset animation?</li>'+
-                '</ol>';
+                '<div id="sunrise-set">' +
+                '<p>Sunrise</p>' +
+                '<p>Sunset</p>' +
+                '<p>' +sunRiseH + ':'+sunRiseM+'a.m.</p>' +
+                '<p>' +sunSetH + ':'+sunSetM+'p.m.</p>' +
+                '</div>' + 
+                '<div id="wind-hum">'+
+                '<p>Wind</p><p>Humidity</p>'+
+                '<p>'+wind+'</p><p>' +w.main.humidity+'% </p>'+
+                '</div>'+ 
+                '<div id="timeContainer"><span id="time"></span></div>';
+
+                function updateTime() {
+                var currentTime = new Date();
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var seconds = currentTime.getSeconds();
+                var ampm = hours >= 12 ? 'pm' : 'am'; 
+                hours = hours % 12; 
+                hours = hours ? hours : 12; 
+                minutes = minutes < 10 ? '0' + minutes : minutes; 
+                seconds = seconds < 10 ? '0' + seconds : seconds; 
+
+                var timeString = hours + ':' + minutes + ':' + seconds +' '+ ampm;
+                document.getElementById('time').innerHTML = timeString;
+                }
+                updateTime(); 
+                setInterval(updateTime, 1000);
+
 
                 const playlists = response.getPlaylist.playlists; 
-                console.log(playlists); 
+                //- console.log(playlists); 
 
                 let html =
                  '<div>'+
@@ -91,22 +123,21 @@ html
                  '<ul>';
                 for (let i = 0; i < playlists.items.length; i++) {
                 html +=  
-                '<a href="' + playlists.items[i].external_urls.spotify + '" target="_blank">'+
-                '<li>'+
+                '<li><a href="' + playlists.items[i].external_urls.spotify + '" target="_blank">'+
                 '<div id="playlistContainer">' + 
-                '<img src="'+playlists.items[i].images[0].url+'" height ="60px" width="60px">'+
+                '<img alt="playlist icon" src="'+playlists.items[i].images[0].url+'" height ="60px" width="60px">'+
                 '<div id="name-by">'+
                 '<p>'+ playlists.items[i].name + '</p>'+
                 '<p>By '+playlists.items[i].owner.display_name +'</p>'+
                 '</div>'+
                 '</div>'+
-                '</li></a>';
+                '</a></li>';
                 }
                 html += '</ul></div>';
                 showMusic.innerHTML = html;
                 //- showMusic.innerHTML = pug.renderFile('index.pug', { playlists: playlists })
             } else {
-                console.error('Request failed. Returned status of ' + xhr.status);
+                //- console.error('Request failed. Returned status of ' + xhr.status);
             }
           });
           xhr.send(JSON.stringify({ latitude: latitude, longitude: longitude }));
