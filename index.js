@@ -25,7 +25,7 @@ app.get('/views/style.css', function(req, res) {
 
 //get location from client
 let weatherRes= "";
-app.post('/getcity', async (req, res) => {
+app.post('/api/getcity', async (req, res) => {
   try {
     console.log('Received POST request to /getcity');
     const { latitude, longitude } = req.body;

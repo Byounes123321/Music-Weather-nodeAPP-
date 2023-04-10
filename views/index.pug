@@ -38,7 +38,7 @@ html(lang="en")
           //- alert("showPos");
           // Make an AJAX request to the server with the latitude and longitude
           var xhr = new XMLHttpRequest();
-          xhr.open("POST", "/getcity");
+          xhr.open("POST", "/api/getcity");
           xhr.setRequestHeader("Content-Type", "application/json");
           xhr.addEventListener("load", function() {
             if (xhr.status === 200) {
@@ -72,7 +72,7 @@ html(lang="en")
                 let sunSet = new Date(w.sys.sunset * 1000);
                 let sunSetH = (sunSet.getHours()-12);
                 let sunSetM = sunSet.getMinutes();
-                
+                //- //Sorry for this atrocity... I couldn't get my page to render using pug variables
                 showWeather.innerHTML =
                 '<h2>' + w.name +' Weather</h2>' +
                 '<div id="temp-icon">'+
