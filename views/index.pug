@@ -1,9 +1,10 @@
 doctype html 
 html(lang="en")
   head
-  script(src="https://pugjs.org/js/pug.js")
-  link(rel="stylesheet", href="views/style.css")
-  title= title
+    script(src="https://pugjs.org/js/pug.js")
+    link(rel="icon", type="image/png", href="views/imgs/music-cloud.png")
+    link(rel="stylesheet", href="views/style.css")
+    title= title
   body
     header 
         h1.site-name Welcome to my Music & Weather App
@@ -68,7 +69,7 @@ html(lang="en")
                 let sunRise = new Date(w.sys.sunrise * 1000);
                 let sunRiseH = sunRise.getHours();
                 let sunRiseM = sunRise.getMinutes();
-
+                console.log(sunRiseM);
                 let sunSet = new Date(w.sys.sunset * 1000);
                 let sunSetH = (sunSet.getHours()-12);
                 let sunSetM = sunSet.getMinutes();
@@ -87,8 +88,8 @@ html(lang="en")
                 '<div id="sunrise-set">' +
                 '<p>Sunrise</p>' +
                 '<p>Sunset</p>' +
-                '<p>' +sunRiseH + ':'+sunRiseM+'a.m.</p>' +
-                '<p>' +sunSetH + ':'+sunSetM+'p.m.</p>' +
+                '<p>' + sunRiseH + ':' + ((sunRiseM < 10) ? '0' + sunRiseM : sunRiseM) + 'a.m.</p>' +
+                '<p>' + sunSetH + ':' + ((sunSetM < 10) ? '0' + sunSetM : sunSetM) + 'p.m.</p>' +
                 '</div>' + 
                 '<div id="wind-hum">'+
                 '<p>Wind</p><p>Humidity</p>'+

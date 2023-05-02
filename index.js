@@ -43,7 +43,7 @@ app.post('/api/getcity', async (req, res) => {
 
 //Set home page
 app.get("/", async (req, res) =>{
-  res.render("index", {title: "Home"})
+  res.render("index", {title: "Music Weather App"})
 })
 
 app.listen(port, () =>{
