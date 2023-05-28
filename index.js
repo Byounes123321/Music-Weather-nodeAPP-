@@ -32,7 +32,7 @@ app.post("/api/getcity", async (req, res) => {
     console.log("latitude:", latitude, "longitude:", longitude);
 
     // Set a timeout value (in milliseconds) for the API call
-    const timeoutDuration = 5000; // 5 seconds
+    const timeoutDuration = 10000; // 5 seconds
 
     // Create a promise that rejects if the API call takes too long
     const timeoutPromise = new Promise((resolve, reject) => {

@@ -138,7 +138,7 @@ html(lang="en")
                 showMusic.innerHTML = html;
                 //- showMusic.innerHTML = pug.renderFile('index.pug', { playlists: playlists })
             } else {
-                //- console.error('Request failed. Returned status of ' + xhr.status);
+                console.error('Request failed. Returned status of ' + xhr.status);
             }
           });
           xhr.send(JSON.stringify({ latitude: latitude, longitude: longitude }));
